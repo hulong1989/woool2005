@@ -1,0 +1,16 @@
+{
+  "name": "FANTASY GUI",
+  "author": "MELLE",
+  "license": "CC0 1.0",
+  "source": "https://opengameart.org/content/fantasy-gui-0",
+  "files": {
+    "panel": "panel_small.png",
+    "panel_wide": "panel_wide.png",
+    "gem_gold": "gem_gold.png",
+    "gem_purple": "gem_purple.png",
+    "gem_red": "gem_red.png",
+    "orb": "orb.png",
+    "ribbon": "ribbon.png",
+    "parchment": "parchment.png"
+  }
+}

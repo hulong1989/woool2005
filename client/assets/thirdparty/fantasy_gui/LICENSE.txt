@@ -1,0 +1,7 @@
+FANTASY GUI
+Author: MELLE
+License: CC0 1.0 Universal (Public Domain)
+Source: https://opengameart.org/content/fantasy-gui-0
+
+Selected panels, gem buttons, orb, ribbon and parchment were cropped
+from the original CC0 sheet for the web client UI.

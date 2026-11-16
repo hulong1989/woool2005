@@ -1,0 +1,7 @@
+Dungeon Crawl Stone Soup tiles
+Authors: DCSS contributors
+License: CC0 1.0 Universal (Public Domain)
+Source: https://github.com/crawl/crawl (crawl-ref/source/rltiles)
+
+Selected 32x32 monster, player, NPC and item tiles converted to GIF
+for the Tk client; alpha transparency preserved by sips.

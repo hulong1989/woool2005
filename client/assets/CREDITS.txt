@@ -1,0 +1,27 @@
+第三方素材与许可
+================
+
+1) FANTASY GUI
+   Author: MELLE
+   License: CC0 1.0
+   Source: https://opengameart.org/content/fantasy-gui-0
+   Use: 桌面客户端面板/边框/缎带/按钮（灰度+蓝钢调色）
+
+2) Isometric Hero and Creatures
+   Author: Clint Bellanger
+   License: CC-BY 3.0
+   Source: https://opengameart.org/content/isometric-hero-and-creatures
+   Use: 桌面客户端玩家角色（裁剪 256x256 帧、缩放、上色）
+   Modification notice: cropped, scaled, tinted.
+
+3) Dungeon Crawl Stone Soup tiles
+   License: CC0 1.0
+   Source: https://opengameart.org/content/dungeon-crawl-32x32-tiles
+   Use: 怪物/NPC/物品/地图贴图
+
+4) Stone Soup isometric floors/walls
+   License: CC0 1.0
+   Use: 等距地砖/墙体
+
+未包含 Kenney 素材（官网下载接口对非浏览器请求返回 403）。
+未包含 996 引擎/传奇世界/爱传世原版切图。

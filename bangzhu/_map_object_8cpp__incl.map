@@ -1,0 +1,5 @@
+base referer
+rect $stdafx_8h.html 400,82 472,108
+rect $localsupport_8h.html 775,7 879,34
+rect $_map_object_8h.html 886,82 987,108
+rect $v_map_8h.html 903,7 970,34

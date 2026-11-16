@@ -1,0 +1,207 @@
+{
+  "adder.gif": [
+    "adder_0.png",
+    "adder_1.png",
+    "adder_2.png"
+  ],
+  "amulet.gif": [
+    "amulet_0.png",
+    "amulet_1.png",
+    "amulet_2.png"
+  ],
+  "armor.gif": [
+    "armor_0.png",
+    "armor_1.png",
+    "armor_2.png"
+  ],
+  "axe.gif": [
+    "axe_0.png",
+    "axe_1.png",
+    "axe_2.png"
+  ],
+  "book.gif": [
+    "book_0.png",
+    "book_1.png",
+    "book_2.png"
+  ],
+  "champion.gif": [
+    "champion_0.png",
+    "champion_1.png",
+    "champion_2.png"
+  ],
+  "chicken.gif": [
+    "chicken_0.png",
+    "chicken_1.png",
+    "chicken_2.png"
+  ],
+  "death_knight.gif": [
+    "death_knight_0.png",
+    "death_knight_1.png",
+    "death_knight_2.png"
+  ],
+  "deer.gif": [
+    "deer_0.png",
+    "deer_1.png",
+    "deer_2.png"
+  ],
+  "devil.gif": [
+    "devil_0.png",
+    "devil_1.png",
+    "devil_2.png"
+  ],
+  "dread_lich.gif": [
+    "dread_lich_0.png",
+    "dread_lich_1.png",
+    "dread_lich_2.png"
+  ],
+  "dummy.gif": [
+    "dummy_0.png",
+    "dummy_1.png",
+    "dummy_2.png"
+  ],
+  "food.gif": [
+    "food_0.png",
+    "food_1.png",
+    "food_2.png"
+  ],
+  "gargoyle.gif": [
+    "gargoyle_0.png",
+    "gargoyle_1.png",
+    "gargoyle_2.png"
+  ],
+  "ghoul.gif": [
+    "ghoul_0.png",
+    "ghoul_1.png",
+    "ghoul_2.png"
+  ],
+  "golem.gif": [
+    "golem_0.png",
+    "golem_1.png",
+    "golem_2.png"
+  ],
+  "helmet.gif": [
+    "helmet_0.png",
+    "helmet_1.png",
+    "helmet_2.png"
+  ],
+  "hound.gif": [
+    "hound_0.png",
+    "hound_1.png",
+    "hound_2.png"
+  ],
+  "mace.gif": [
+    "mace_0.png",
+    "mace_1.png",
+    "mace_2.png"
+  ],
+  "mage.gif": [
+    "mage_0.png",
+    "mage_1.png",
+    "mage_2.png"
+  ],
+  "misc.gif": [
+    "misc_0.png",
+    "misc_1.png",
+    "misc_2.png"
+  ],
+  "npc.gif": [
+    "npc_0.png",
+    "npc_1.png",
+    "npc_2.png"
+  ],
+  "npc2.gif": [
+    "npc2_0.png",
+    "npc2_1.png",
+    "npc2_2.png"
+  ],
+  "obsidian.gif": [
+    "obsidian_0.png",
+    "obsidian_1.png",
+    "obsidian_2.png"
+  ],
+  "orc.gif": [
+    "orc_0.png",
+    "orc_1.png",
+    "orc_2.png"
+  ],
+  "orc_knight.gif": [
+    "orc_knight_0.png",
+    "orc_knight_1.png",
+    "orc_knight_2.png"
+  ],
+  "orc_warlord.gif": [
+    "orc_warlord_0.png",
+    "orc_warlord_1.png",
+    "orc_warlord_2.png"
+  ],
+  "orc_warrior.gif": [
+    "orc_warrior_0.png",
+    "orc_warrior_1.png",
+    "orc_warrior_2.png"
+  ],
+  "plate.gif": [
+    "plate_0.png",
+    "plate_1.png",
+    "plate_2.png"
+  ],
+  "potion_hp.gif": [
+    "potion_hp_0.png",
+    "potion_hp_1.png",
+    "potion_hp_2.png"
+  ],
+  "ring.gif": [
+    "ring_0.png",
+    "ring_1.png",
+    "ring_2.png"
+  ],
+  "robe.gif": [
+    "robe_0.png",
+    "robe_1.png",
+    "robe_2.png"
+  ],
+  "scorpion.gif": [
+    "scorpion_0.png",
+    "scorpion_1.png",
+    "scorpion_2.png"
+  ],
+  "shadow_demon.gif": [
+    "shadow_demon_0.png",
+    "shadow_demon_1.png",
+    "shadow_demon_2.png"
+  ],
+  "skeleton.gif": [
+    "skeleton_0.png",
+    "skeleton_1.png",
+    "skeleton_2.png"
+  ],
+  "staff.gif": [
+    "staff_0.png",
+    "staff_1.png",
+    "staff_2.png"
+  ],
+  "statue.gif": [
+    "statue_0.png",
+    "statue_1.png",
+    "statue_2.png"
+  ],
+  "sword.gif": [
+    "sword_0.png",
+    "sword_1.png",
+    "sword_2.png"
+  ],
+  "taoist.gif": [
+    "taoist_0.png",
+    "taoist_1.png",
+    "taoist_2.png"
+  ],
+  "warg.gif": [
+    "warg_0.png",
+    "warg_1.png",
+    "warg_2.png"
+  ],
+  "warrior.gif": [
+    "warrior_0.png",
+    "warrior_1.png",
+    "warrior_2.png"
+  ]
+}

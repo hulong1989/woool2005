@@ -1,0 +1,32 @@
+# 构建产物
+build/
+*.o
+*.obj
+*.exe
+*.pdb
+*.ilk
+
+# 运行时生成的角色存档
+data/players/
+
+# macOS
+.DS_Store
+
+# 编辑器
+.vscode/
+.idea/
+
+# ASan 构建目录
+build-asan/
+
+# 运行时行会数据
+data/guilds.dat
+
+# 客户端运行时生成的图集/音效
+client/assets/*.png
+client/assets/*.ppm
+client/assets/*.wav
+
+# server996 外壳运行时日志与自动备份
+server996/Log/
+server996/Share/

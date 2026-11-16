@@ -1,0 +1,8 @@
+{
+  "GameGate": 7101,
+  "GameSrv": 7100,
+  "LoginSrv": 7001,
+  "DBSrv": 7002,
+  "LogSrv": 7003,
+  "backup_seconds": 60
+}

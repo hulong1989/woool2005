@@ -1,0 +1,10 @@
+Isometric Stone Soup
+Author: Screaming Brain Studios
+License: CC0 1.0 Universal (Public Domain)
+Source: https://opengameart.org/content/isometric-stone-soup
+
+Tiles are derived from the CC0 Dungeon Crawl Stone Soup tile set
+(also public domain), converted to isometric 64x32.
+
+Selected tiles in this folder were cropped and converted to GIF for the
+Tk client; magenta background was made transparent.

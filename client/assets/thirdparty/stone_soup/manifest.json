@@ -1,0 +1,21 @@
+{
+  "name": "Isometric Stone Soup",
+  "author": "Screaming Brain Studios",
+  "license": "CC0 1.0",
+  "source": "https://opengameart.org/content/isometric-stone-soup",
+  "tile_size": {
+    "w": 64,
+    "h": 32
+  },
+  "tiles": {
+    "grass": "grass.gif",
+    "grass2": "grass2.gif",
+    "grass3": "grass3.gif",
+    "crypt": "crypt.gif",
+    "crypt2": "crypt2.gif",
+    "crypt3": "crypt3.gif",
+    "wall": "wall.gif",
+    "wall2": "wall2.gif",
+    "crypt_lit": "crypt_lit.gif"
+  }
+}

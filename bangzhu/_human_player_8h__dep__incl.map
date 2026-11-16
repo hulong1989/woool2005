@@ -1,0 +1,8 @@
+base referer
+rect $_down_item_mgr_8cpp.html 7,82 138,108
+rect $_equipment_8cpp.html 162,82 274,108
+rect $_exchange_obj_8cpp.html 298,82 426,108
+rect $_human_player_mgr_8h.html 450,82 586,108
+rect $_game_world_8cpp.html 378,7 498,34
+rect $_human_player_mgr_8cpp.html 522,7 671,34
+rect $_human_player_8cpp.html 610,82 738,108

@@ -1,0 +1,11 @@
+base referer
+rect $class_c_human_player.html 286,306 398,332
+rect $structtag_c_r_e_a_t_e_h_u_m_a_n_d_e_s_c.html 251,212 432,239
+rect $class_c_exchange_obj.html 144,412 256,439
+rect $class_c_equipment.html 424,412 520,439
+rect $class_c_alive_object.html 456,212 558,239
+rect $class_c_map_object.html 296,103 392,130
+rect $classx_list_host.html 416,103 598,130
+rect $classx_list_host_1_1x_list_node.html 378,10 554,36
+rect $classx_list_host.html 622,103 814,130
+rect $classx_list_host_1_1x_event_listener.html 675,10 880,36

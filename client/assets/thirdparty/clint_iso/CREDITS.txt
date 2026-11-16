@@ -1,0 +1,8 @@
+Isometric Hero and Creatures
+Author: Clint Bellanger
+Source: https://opengameart.org/content/isometric-hero-and-creatures
+License: CC-BY 3.0 (https://creativecommons.org/licenses/by/3.0/)
+Files: male_heavy.png, male_light.png, male_unarmored.png, goblin.png,
+       skeleton.png, zombie.png, slime.png, ogre.png, werewolf.png,
+       magician.png, elemental.png
+Modifications: cropped 256x256 frames, scaled to 96x96, tinted per class/monster.

@@ -1,0 +1,8 @@
+// res/public.rc  ——  重建的资源脚本（原 ..\res\public.rc 不在快照中）
+// 注：当前构建不编译资源，此文件用于保留工程结构 / 供 Windows 版本使用。
+#include "resource.h"
+
+STRINGTABLE
+BEGIN
+    IDS_SERVER_TITLE "GameServer"
+END

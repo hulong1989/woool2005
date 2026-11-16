@@ -1,0 +1,4 @@
+base referer
+rect $stdafx_8h.html 7,7 79,34
+rect $_alive_object_8h.html 103,7 207,34
+rect $v_map_8h.html 231,7 298,34

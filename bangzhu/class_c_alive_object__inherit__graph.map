@@ -1,0 +1,3 @@
+base referer
+rect $class_c_human_player.html 7,156 119,183
+rect $class_c_map_object.html 15,7 111,34

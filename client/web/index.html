@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<title>传奇世界 · 网页客户端</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div id="app">
+  <canvas id="game" width="1024" height="640"></canvas>
+  <div id="vignette"></div>
+
+  <!-- 左上角色框 -->
+  <section id="char-frame" class="frame">
+    <div class="portrait">
+      <img id="portrait-img" alt="">
+      <span id="portrait-level">1</span>
+    </div>
+    <div class="char-body">
+      <div class="char-name"><span id="char-name">网页演示</span><em id="char-class">战士</em></div>
+      <div class="statline"><label>HP</label><div class="bar"><i id="hp-fill"></i></div><b id="hp-text">50/50</b></div>
+      <div class="statline"><label>MP</label><div class="bar mp"><i id="mp-fill"></i></div><b id="mp-text">20/20</b></div>
+      <div class="statline"><label>EXP</label><div class="bar exp"><i id="exp-fill"></i></div><b id="exp-text">0/100</b></div>
+      <div class="char-foot"><span id="char-gold">金币 1000</span><span id="char-pos">477,222</span></div>
+    </div>
+  </section>
+
+  <!-- 右上小地图 -->
+  <section id="map-frame" class="frame">
+    <canvas id="minimap" width="180" height="120"></canvas>
+    <div class="map-title" id="map-title">中州</div>
+  </section>
+
+  <!-- 任务追踪 -->
+  <section id="quest-tracker" class="frame hidden">
+    <div class="qt-title">任务追踪</div>
+    <div id="qt-body"></div>
+  </section>
+
+  <!-- 目标血条 -->
+  <section id="target-frame" class="frame hidden">
+    <div class="target-name" id="target-name">—</div>
+    <div class="bar"><i id="target-hp"></i></div>
+  </section>
+
+  <!-- 左下聊天 -->
+  <section id="chat-frame" class="frame">
+    <div class="chat-tabs">
+      <button class="active" data-tab="all">综合</button>
+      <button data-tab="sys">系统</button>
+      <button data-tab="fight">战斗</button>
+    </div>
+    <div id="chat"></div>
+    <input id="chat-input" maxlength="120" placeholder="聊天，或输入 /gmhelp、/quests …">
+  </section>
+
+  <!-- 底部技能栏 + 菜单 -->
+  <section id="bottom-frame">
+    <div id="skill-slots" class="slots"></div>
+    <div id="menu-buttons">
+      <button data-panel="char"><b>角色</b><small>C</small></button>
+      <button data-panel="bag"><b>背包</b><small>B</small></button>
+      <button data-panel="skill"><b>技能</b><small>K</small></button>
+      <button data-panel="quest"><b>任务</b><small>Q</small></button>
+      <button data-panel="party"><b>队伍</b><small>P</small></button>
+      <button data-panel="dungeon"><b>副本</b><small>D</small></button>
+      <button data-panel="trade"><b>交易</b><small>T</small></button>
+      <button data-panel="shop"><b>商店</b><small>V</small></button>
+      <button data-panel="guild"><b>行会</b><small>G</small></button>
+      <button data-panel="system"><b>系统</b><small>Esc</small></button>
+    </div>
+  </section>
+
+  <div id="hint">左键移动 / 点怪攻击 / 点 NPC 对话 · 右键攻击 · F1-F8 技能 · 1-6 药品</div>
+  <button id="audio-toggle">音效：关</button>
+  <button id="logout-btn">退出</button>
+
+  <!-- 死亡 / 过图 -->
+  <div id="death" class="hidden">
+    <div class="death-title">你被击倒了</div>
+    <div class="death-sub" id="death-sub">正在回城复活…</div>
+  </div>
+  <div id="map-banner" class="hidden"></div>
+
+  <!-- NPC 对话框 -->
+  <div id="dialog" class="hidden">
+    <div class="dialog-window">
+      <div class="dialog-title"><span id="dialog-npc">NPC</span><button id="dialog-close">×</button></div>
+      <div id="dialog-text"></div>
+      <div id="dialog-options"></div>
+    </div>
+  </div>
+
+  <!-- 面板 -->
+  <div id="modal" class="hidden">
+    <div id="modal-window" class="frame">
+      <div class="modal-title"><span id="modal-title">背包</span><button id="modal-close">×</button></div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+</div>
+<!-- 登录 -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="login-title">传奇世界</div>
+    <div class="login-sub">账号登录 · 首次请先注册</div>
+    <label>账号<input id="login-name" maxlength="20" value="网页演示"></label>
+    <label>密码<input id="login-pass" type="password" maxlength="40" placeholder="至少 1 位"></label>
+    <label>职业
+      <select id="login-class"><option value="0">战士</option><option value="1">法师</option><option value="2">道士</option></select>
+    </label>
+    <div class="login-actions">
+      <button id="login-btn">登录</button>
+      <button id="register-btn">注册</button>
+    </div>
+    <div id="login-msg"></div>
+  </div>
+</div>
+<div id="char-screen" class="hidden">
+  <div class="char-box">
+    <div class="login-title">选择角色</div>
+    <div class="login-sub">账号：<span id="char-account"></span></div>
+    <div id="char-list"></div>
+    <div class="create-row">
+      <input id="char-name" maxlength="20" placeholder="新角色名">
+      <select id="char-class"><option value="0">战士</option><option value="1">法师</option><option value="2">道士</option></select>
+      <button id="create-btn">创建</button>
+    </div>
+    <button id="char-back" class="back-btn">返回登录</button>
+    <div id="char-msg"></div>
+  </div>
+</div>
+<script src="/game.js"></script>
+</body>
+</html>

@@ -1,0 +1,4 @@
+base referer
+rect $class_c_find_file.html 7,33 87,59
+rect $class_c_logic_map_mgr.html 143,7 255,34
+rect $class_c_physics_map_mgr.html 136,58 262,85

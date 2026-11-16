@@ -1,0 +1,4 @@
+#!/bin/sh
+cd "/Users/canyue/Documents/woool" || exit 1
+echo "launch $(date)" >> /tmp/woool_app.log
+exec /usr/bin/python3 client/game_client.py --auto >> /tmp/woool_app.log 2>&1

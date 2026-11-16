@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GameServer 管理后台</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo">GS</div>
+      <div><b>GameServer</b><span>管理后台</span></div>
+    </div>
+    <nav>
+      <button class="nav active" data-page="overview">总览</button>
+      <button class="nav" data-page="players">在线玩家</button>
+      <button class="nav" data-page="gm">GM 工具</button>
+      <button class="nav" data-page="dungeons">副本实例</button>
+      <button class="nav" data-page="bosses">Boss</button>
+      <button class="nav" data-page="logs">运行日志</button>
+      <button class="nav" data-page="console">控制台</button>
+      <button class="nav" data-page="settings">设置</button>
+    </nav>
+    <div class="side-status">
+      <span id="side-dot" class="dot off"></span>
+      <span id="side-text">连接中…</span>
+      <small id="side-uptime"></small>
+    </div>
+  </aside>
+
+  <main>
+    <header class="topbar">
+      <div>
+        <h1 id="page-title">总览</h1>
+        <p id="page-sub">服务器实时状态与快捷操作</p>
+      </div>
+      <div class="top-actions">
+        <button class="btn ghost" id="btn-client">打开客户端</button>
+        <button class="btn green" id="btn-start">启动</button>
+        <button class="btn red" id="btn-stop">停止</button>
+        <button class="btn yellow" id="btn-restart">重启</button>
+      </div>
+    </header>
+
+    <section class="page active" id="page-overview">
+      <div class="cards">
+        <div class="card"><span>在线客户端</span><b id="c-clients">0</b></div>
+        <div class="card"><span>在线玩家</span><b id="c-players">0</b></div>
+        <div class="card"><span>怪物</span><b id="c-monsters">0</b></div>
+        <div class="card"><span>NPC</span><b id="c-npc">0</b></div>
+        <div class="card"><span>Boss</span><b id="c-boss">0</b></div>
+        <div class="card"><span>任务</span><b id="c-quests">0</b></div>
+        <div class="card"><span>副本实例</span><b id="c-dungeon">0</b></div>
+        <div class="card"><span>当前赛季</span><b id="c-season">1</b></div>
+      </div>
+
+      <div class="grid2">
+        <div class="panel">
+          <div class="panel-head"><h2>在线客户端趋势</h2><span class="hint">最近 40 次采样</span></div>
+          <canvas id="trend" height="150"></canvas>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>快捷操作</h2></div>
+          <div class="quick">
+            <div class="input-row">
+              <input id="announce-input" placeholder="输入全服公告内容…">
+              <button class="btn yellow" id="btn-announce">发送公告</button>
+            </div>
+            <div class="input-row">
+              <input id="quick-cmd" placeholder="任意服务器命令，如: addgold 测试玩家 1000">
+              <button class="btn" id="btn-quick">执行</button>
+            </div>
+            <div class="input-row">
+              <button class="btn ghost" id="btn-save">保存存档</button>
+              <button class="btn ghost" id="btn-refresh">立即刷新</button>
+              <span class="hint" id="last-refresh"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h2>最近日志</h2><a href="#" data-goto="logs">查看全部 →</a></div>
+        <pre class="mini-log" id="mini-log"></pre>
+      </div>
+    </section>
+
+    <section class="page" id="page-players">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>在线玩家</h2>
+          <div class="input-row">
+            <input id="player-search" placeholder="搜索名字…">
+            <button class="btn ghost" id="btn-players-refresh">刷新</button>
+          </div>
+        </div>
+        <table class="table">
+          <thead><tr><th>名字</th><th>等级</th><th>地图</th><th>坐标</th><th>类型</th><th class="right">操作</th></tr></thead>
+          <tbody id="players-body"><tr><td colspan="6" class="empty">暂无在线玩家</td></tr></tbody>
+        </table>
+      </div>
+      <div class="panel">
+        <div class="panel-head"><h2>玩家操作说明</h2></div>
+        <p class="hint">“传送”会修改玩家地图与坐标；“经验/金币/物品”直接调用服务器管理命令；“踢下线”会断开该客户端。</p>
+      </div>
+    </section>
+
+    <section class="page" id="page-gm">
+      <div class="grid2">
+        <div class="panel">
+          <div class="panel-head"><h2>GM 账号</h2><span class="hint">data/gm.txt</span></div>
+          <table class="table">
+            <thead><tr><th>角色</th><th>等级</th><th class="right">操作</th></tr></thead>
+            <tbody id="gm-body"><tr><td colspan="3" class="empty">暂无 GM</td></tr></tbody>
+          </table>
+          <div class="input-row" style="margin-top:12px">
+            <input id="gm-name" placeholder="角色名">
+            <select id="gm-level">
+              <option value="1">1 基础</option>
+              <option value="2">2 进阶</option>
+              <option value="3" selected>3 管理</option>
+            </select>
+            <button class="btn green" id="btn-gm-add">设为 GM</button>
+          </div>
+          <p class="hint">GM 在游戏聊天框输入 <b>/gmhelp</b> 查看命令；1 级发物品/经验/金币/传送/治疗，2 级刷怪/公告/召唤，3 级踢人/管理 GM。</p>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>GM 快捷工具</h2></div>
+          <div class="quick">
+            <div class="input-row">
+              <input id="gm-spawn-name" placeholder="怪物名，如 沃玛教主" style="flex:1">
+              <input id="gm-spawn-map" placeholder="地图" value="1" style="width:70px">
+              <input id="gm-spawn-x" placeholder="x" value="477" style="width:70px">
+              <input id="gm-spawn-y" placeholder="y" value="222" style="width:70px">
+              <button class="btn yellow" id="btn-gm-spawn">刷怪</button>
+            </div>
+            <div class="input-row">
+              <input id="gm-heal-name" placeholder="玩家名（治疗）">
+              <button class="btn green" id="btn-gm-heal">恢复 HP/MP</button>
+            </div>
+            <div class="input-row">
+              <input id="gm-announce" placeholder="全服公告内容…" style="flex:1">
+              <button class="btn yellow" id="btn-gm-announce">发送</button>
+            </div>
+            <div class="input-row">
+              <button class="btn ghost" id="btn-gm-list">刷新 GM 名单</button>
+              <span class="hint">更多操作可直接在“控制台”执行</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-dungeons">
+      <div class="dungeon-grid" id="dungeons"></div>
+    </section>
+
+    <section class="page" id="page-bosses">
+      <div class="panel">
+        <div class="panel-head"><h2>Boss 刷新状态</h2><button class="btn ghost" id="btn-boss-refresh">刷新</button></div>
+        <table class="table">
+          <thead><tr><th>Boss</th><th>地图</th><th>坐标</th><th>状态</th></tr></thead>
+          <tbody id="boss-body"><tr><td colspan="4" class="empty">暂无数据</td></tr></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="page" id="page-logs">
+      <div class="panel">
+        <div class="panel-head">
+          <h2>运行日志</h2>
+          <div class="input-row">
+            <input id="log-search" placeholder="过滤关键字…">
+            <label class="check"><input type="checkbox" id="log-pause"> 暂停</label>
+            <button class="btn ghost" id="btn-log-clear">清屏</button>
+          </div>
+        </div>
+        <pre class="log-view" id="log-view"></pre>
+      </div>
+    </section>
+
+    <section class="page" id="page-console">
+      <div class="panel">
+        <div class="panel-head"><h2>服务器控制台</h2><span class="hint">直接向服务器发送控制台命令</span></div>
+        <pre class="log-view console-view" id="console-view"></pre>
+        <div class="input-row console-input">
+          <input id="console-input" placeholder="输入命令后回车，例如: status / online / save / announce 测试">
+          <button class="btn" id="btn-console">发送</button>
+        </div>
+        <div class="chips" id="quick-chips"></div>
+      </div>
+    </section>
+
+    <section class="page" id="page-settings">
+      <div class="grid2">
+        <div class="panel">
+          <div class="panel-head"><h2>运行环境</h2></div>
+          <dl class="kv" id="config-list"></dl>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h2>服务控制</h2></div>
+          <div class="input-row">
+            <button class="btn green" id="s-start">启动服务器</button>
+            <button class="btn red" id="s-stop">停止服务器</button>
+            <button class="btn yellow" id="s-restart">重启服务器</button>
+          </div>
+          <p class="hint">关闭管理后台会同时停止服务器。存档在退出时自动保存。</p>
+        </div>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="toast" id="toast"></div>
+<script src="/app.js"></script>
+</body>
+</html>

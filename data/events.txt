@@ -1,0 +1,4 @@
+# 每日活动：doubleexp/名称/开始HH:MM/持续分钟
+doubleexp/双倍经验/21:00/30
+# worldboss/名称/开始HH:MM/持续分钟/地图/x/y/怪物
+worldboss/世界Boss/22:00/10/4/280/240/沃玛教主

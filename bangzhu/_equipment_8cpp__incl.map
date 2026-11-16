@@ -1,0 +1,4 @@
+base referer
+rect $stdafx_8h.html 7,82 79,108
+rect $_equipment_8h.html 110,7 214,34
+rect $_human_player_8h.html 154,82 263,108

@@ -1,0 +1,409 @@
+html, body {
+  margin: 0; height: 100%; background: #05060a;
+  color: #e8e2d0; font: 13px/1.5 "Songti SC", "STSong", "PingFang SC", serif;
+  overflow: hidden; user-select: none;
+}
+#app {
+  position: relative; width: 1024px; height: 640px; margin: 0 auto;
+  top: 50%; transform: translateY(-50%);
+  background: #0d0b08; box-shadow: 0 0 60px rgba(0,0,0,.9);
+  border: 1px solid #4a3518;
+}
+canvas#game { display: block; width: 100%; height: 100%; }
+#vignette {
+  position: absolute; inset: 0; pointer-events: none;
+  box-shadow: inset 0 0 90px rgba(0,0,0,.55);
+}
+
+/* CC0 FANTASY GUI 面板 */
+.frame {
+  position: absolute;
+  background: url("/assets/thirdparty/fantasy_gui/panel_small.png") center / 100% 100% no-repeat;
+  border: 0;
+  border-radius: 2px;
+  box-shadow: 0 6px 22px rgba(0,0,0,.7);
+}
+
+/* 左上角色 */
+#char-frame {
+  left: 10px; top: 10px; width: 306px; height: 128px;
+  display: flex; gap: 10px; padding: 10px; box-sizing: border-box;
+}
+.portrait {
+  position: relative; width: 76px; height: 76px; flex: 0 0 76px;
+  background: url("/assets/thirdparty/fantasy_gui/orb.png") center / 100% 100% no-repeat;
+  overflow: hidden;
+}
+.portrait img {
+  position: absolute; left: 50%; top: 50%; width: 54px; height: 54px;
+  transform: translate(-50%, -50%); image-rendering: pixelated;
+}
+#portrait-level {
+  position: absolute; right: 0px; bottom: 2px;
+  color: #f5d98a; font: bold 11px Menlo, monospace;
+  background: #2a1e0e; border: 1px solid #8c6a32;
+  padding: 0 4px; border-radius: 3px;
+}
+.char-body { flex: 1; min-width: 0; }
+.char-name {
+  display: flex; align-items: baseline; gap: 6px;
+  margin: 0 0 3px; font-size: 15px; color: #f5d98a;
+  text-shadow: 0 1px 2px #000;
+}
+.char-name em { font-style: normal; font-size: 10px; color: #a8843f; }
+.statline { display: flex; align-items: center; gap: 4px; margin-top: 3px; }
+.statline label { width: 24px; font-size: 10px; color: #a8843f; }
+.bar {
+  flex: 1; height: 9px; background: #1d140a;
+  border: 1px solid #5b4523; border-radius: 2px; overflow: hidden;
+}
+.bar i {
+  display: block; height: 100%; width: 50%;
+  background: linear-gradient(180deg, #d05a4a, #8c2418);
+  transition: width .2s;
+}
+.bar.mp i { background: linear-gradient(180deg, #5a86d0, #1c3f8c); }
+.bar.exp i { background: linear-gradient(180deg, #e8c36a, #a87a24); }
+.statline b { width: 54px; font: 10px Menlo, monospace; color: #d9cba8; text-align: right; }
+.char-foot {
+  display: flex; justify-content: space-between;
+  margin-top: 5px; font-size: 10px; color: #c9a24a;
+}
+
+/* 小地图 */
+#map-frame { right: 10px; top: 10px; width: 190px; height: 150px; padding: 4px; box-sizing: border-box; }
+#minimap { width: 180px; height: 120px; display: block; background: #0a0906; }
+.map-title {
+  margin-top: 2px; text-align: center; font-size: 11px; color: #c9a24a;
+  letter-spacing: 2px;
+}
+
+/* 目标 */
+#target-frame {
+  left: 50%; top: 10px; transform: translateX(-50%);
+  width: 260px; padding: 6px 10px; box-sizing: border-box;
+  display: none;
+}
+#target-frame:not(.hidden) { display: block; }
+.target-name { font-size: 12px; color: #f0c88a; margin-bottom: 4px; text-align: center; }
+
+/* 聊天 */
+#chat-frame {
+  left: 10px; bottom: 10px; width: 380px; height: 154px;
+  padding: 10px 12px; box-sizing: border-box; display: flex; flex-direction: column;
+}
+.chat-tabs { display: flex; gap: 2px; margin-bottom: 3px; }
+.chat-tabs button {
+  background: #1a1309; color: #8f7a52; border: 1px solid #4a3518;
+  font-size: 10px; padding: 1px 8px; cursor: pointer; border-radius: 2px 2px 0 0;
+}
+.chat-tabs button.active { color: #f5d98a; border-color: #a8843f; background: #2a1e0e; }
+#chat {
+  flex: 1; overflow-y: auto; font-size: 12px; color: #d6c8a8;
+  white-space: pre-wrap; word-break: break-all;
+}
+#chat .sys { color: #e8c36a; }
+#chat .warn { color: #ffb46a; }
+#chat .fight { color: #ff8b7a; }
+#chat-input {
+  width: 100%; box-sizing: border-box; margin-top: 3px;
+  background: #120d07; border: 1px solid #5b4523; color: #f0e4c8;
+  padding: 3px 6px; outline: none; font: 12px "Songti SC", serif;
+}
+
+/* 底部 */
+#bottom-frame {
+  position: absolute; left: 380px; right: 8px; bottom: 10px;
+  height: 44px; display: flex; align-items: flex-end; gap: 2px;
+}
+#skill-slots { display: flex; gap: 3px; }
+.slot {
+  width: 32px; height: 38px; position: relative;
+  background: url("/assets/thirdparty/fantasy_gui/gem_purple.png") center / 100% 100% no-repeat;
+  border: 0; border-radius: 2px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  font-size: 9px; color: #c9b789; cursor: pointer; overflow: hidden;
+  text-align: center; line-height: 1.1; padding: 1px; box-sizing: border-box;
+}
+.slot span { font: 9px Menlo, monospace; color: #a8843f; }
+.slot small { font-size: 9px; white-space: nowrap; overflow: hidden; max-width: 34px; }
+.slot:hover { border-color: #e8c36a; }
+.slot.cool { filter: grayscale(.75) brightness(.62); }
+.slot .cd {
+  position: absolute; inset: 0; background: rgba(0,0,0,.55);
+  color: #fff; font: bold 12px Menlo, monospace;
+  display: flex; align-items: center; justify-content: center;
+}
+#menu-buttons { display: flex; gap: 3px; margin-left: auto; }
+#menu-buttons button {
+  width: 34px; height: 38px; cursor: pointer;
+  background: url("/assets/thirdparty/fantasy_gui/gem_gold.png") center / 100% 100% no-repeat;
+  border: 0; border-radius: 2px; color: #fff4d0;
+  font-family: inherit; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1px;
+  text-shadow: 0 1px 2px #2a1504;
+}
+#menu-buttons button:hover { filter: brightness(1.25); color: #fff; }
+#menu-buttons b { font-size: 9px; font-weight: normal; }
+#menu-buttons small { font: 8px Menlo, monospace; color: #8f7a52; }
+
+#hint {
+  position: absolute; left: 10px; bottom: 168px;
+  color: #6f5d3c; font-size: 10px; pointer-events: none;
+}
+
+/* 面板 */
+#modal {
+  position: absolute; inset: 0; background: rgba(0,0,0,.45);
+  display: flex; align-items: center; justify-content: center;
+}
+#modal.hidden { display: none; }
+#modal-window {
+  position: relative; width: 500px; max-height: 480px;
+  padding: 0 0 8px; display: flex; flex-direction: column;
+  background-image: url("/assets/thirdparty/fantasy_gui/panel_wide.png");
+}
+.modal-title {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 8px 14px 0; padding: 6px 30px 6px 24px;
+  min-height: 34px; color: #fff0d0; font-size: 14px; letter-spacing: 3px;
+  background: url("/assets/thirdparty/fantasy_gui/ribbon.png") center / 100% 100% no-repeat;
+  text-shadow: 0 1px 2px #3a0505;
+}
+#modal-close {
+  position: absolute; right: 10px; top: 8px;
+  width: 28px; height: 28px; border: 0; cursor: pointer;
+  background: url("/assets/thirdparty/fantasy_gui/gem_red.png") center / 100% 100% no-repeat;
+  color: #fff; font-size: 16px; line-height: 1;
+}
+#modal-body {
+  margin: 8px 14px; padding: 16px 18px 24px; overflow-y: auto; max-height: 400px;
+  background: #e8d3a8 url("/assets/thirdparty/fantasy_gui/parchment.png") center top / 100% 112% no-repeat;
+  color: #3a2412; border-radius: 2px;
+}
+.row { border-bottom-color: rgba(90,55,25,.3); }
+.row .muted { color: #6b4a2a; }
+.row button {
+  background: #4a2c14; border: 1px solid #7a4a20; color: #f0d9a8;
+}
+.stats-grid div { color: #3a2412; }
+.stats-grid span { color: #7a3f1f; }
+.bag-cell {
+  border-color: #8a5a2a; background: rgba(90,55,25,.10); color: #3a2412;
+}
+.bag-cell b { color: #7a2f14; }
+
+.row {
+  display: flex; align-items: center; gap: 6px;
+  padding: 4px 2px; border-bottom: 1px solid rgba(91,69,35,.35);
+  font-size: 12px;
+}
+.row img { width: 32px; height: 32px; image-rendering: pixelated; }
+.row .grow { flex: 1; min-width: 0; }
+.row .muted { color: #8f7a52; font-size: 10px; }
+.row button {
+  background: #2a1e0e; border: 1px solid #6b542c; color: #e8d6a8;
+  font-size: 11px; padding: 2px 8px; cursor: pointer; border-radius: 2px;
+}
+.row button:hover { border-color: #e8c36a; }
+.grid-bag { display: grid; grid-template-columns: repeat(6, 1fr); gap: 4px; }
+.bag-cell {
+  height: 58px; border: 1px solid #4a3518; background: #120d07;
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; font-size: 9px; color: #c9b789; cursor: pointer;
+  border-radius: 2px; position: relative;
+}
+.bag-cell:hover { border-color: #c9a24a; }
+.bag-cell img { width: 32px; height: 32px; image-rendering: pixelated; }
+.bag-cell b { position: absolute; right: 2px; bottom: 1px; color: #f5d98a; font: 9px Menlo; }
+.stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 12px; margin: 6px 0 2px; }
+.stats-grid div { display: flex; justify-content: space-between; font-size: 11px; color: #d6c8a8; }
+.stats-grid span { color: #a8843f; }
+
+/* 装备纸娃娃 */
+.doll {
+  display: grid; grid-template-columns: repeat(4, 56px);
+  grid-template-rows: repeat(4, 50px); gap: 4px;
+  justify-content: center; margin: 2px auto 6px;
+}
+.doll-slot {
+  border: 1px solid #7a4a20; background: rgba(90,55,25,.10);
+  border-radius: 2px; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 1px;
+  color: #7a3f1f; font-size: 10px; overflow: hidden;
+}
+.doll-slot.filled { cursor: pointer; background: rgba(90,55,25,.18); }
+.doll-slot.filled:hover { border-color: #3a1c08; }
+.doll-slot img { width: 28px; height: 28px; image-rendering: pixelated; }
+.doll-slot span { max-width: 58px; white-space: nowrap; overflow: hidden; font-size: 9px; }
+.doll-center {
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  border: 1px solid #7a4a20; background: rgba(90,55,25,.08); border-radius: 2px;
+}
+.doll-portrait {
+  width: 56px; height: 56px; border-radius: 50%;
+  background: url("/assets/thirdparty/fantasy_gui/orb.png") center / 100% 100% no-repeat;
+  display: flex; align-items: center; justify-content: center;
+}
+.doll-portrait img { width: 40px; height: 40px; image-rendering: pixelated; }
+.doll-name { margin-top: 2px; font-size: 10px; color: #5a2a10; }
+
+.slot.potion { width: 26px; background-image: url("/assets/thirdparty/fantasy_gui/gem_green.png"); }
+.slot.potion b { position: absolute; right: 2px; bottom: 1px; color: #fff; font: 9px Menlo, monospace; }
+
+/* NPC 对话框 */
+#dialog {
+  position: absolute; left: 50%; bottom: 176px; transform: translateX(-50%);
+  width: 470px; z-index: 8;
+}
+#dialog.hidden { display: none; }
+.dialog-window {
+  background: url("/assets/thirdparty/fantasy_gui/panel_wide.png") center / 100% 100% no-repeat;
+  padding: 0 14px 12px; filter: drop-shadow(0 8px 20px rgba(0,0,0,.7));
+}
+.dialog-title {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 8px 16px 0; padding: 5px 26px 5px 22px; min-height: 30px;
+  background: url("/assets/thirdparty/fantasy_gui/ribbon.png") center / 100% 100% no-repeat;
+  color: #fff0d0; font-size: 13px; letter-spacing: 2px; text-shadow: 0 1px 2px #3a0505;
+}
+#dialog-close {
+  background: transparent; border: 0; color: #fff; font-size: 16px; cursor: pointer;
+}
+#dialog-text {
+  margin: 10px 10px 8px; padding: 14px 16px; min-height: 64px;
+  background: url("/assets/thirdparty/fantasy_gui/parchment.png") center top / 100% 112% no-repeat;
+  color: #3a2412; font-size: 13px; line-height: 1.7;
+}
+#dialog-options { display: flex; flex-direction: column; gap: 5px; margin: 0 10px; }
+#dialog-options button {
+  text-align: left; padding: 7px 14px; cursor: pointer;
+  background: url("/assets/thirdparty/fantasy_gui/gem_gold.png") center / 100% 100% no-repeat;
+  border: 0; color: #fff4d0; font-family: inherit; font-size: 12px;
+  text-shadow: 0 1px 2px #2a1504;
+}
+#dialog-options button:hover { filter: brightness(1.25); }
+
+/* 任务追踪 */
+#quest-tracker {
+  right: 10px; top: 170px; width: 190px; padding: 6px 8px;
+  background-image: url("/assets/thirdparty/fantasy_gui/panel_small.png");
+  color: #e8d6a8; pointer-events: none;
+}
+#quest-tracker.hidden { display: none; }
+.qt-title { color: #f5d98a; font-size: 11px; letter-spacing: 2px; margin-bottom: 3px; }
+.qt-quest { font-size: 11px; margin: 3px 0; border-top: 1px solid rgba(91,69,35,.4); padding-top: 3px; }
+.qt-quest b { color: #ffd76a; font-weight: normal; }
+.qt-quest em { font-style: normal; color: #bfae8a; font-size: 10px; }
+
+/* 死亡遮罩 */
+#death {
+  position: absolute; inset: 0; z-index: 20; pointer-events: none;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: radial-gradient(circle, rgba(60,0,0,.35), rgba(0,0,0,.72));
+}
+#death.hidden { display: none; }
+.death-title {
+  color: #e8b0a0; font-size: 34px; letter-spacing: 8px;
+  text-shadow: 0 2px 12px #000, 0 0 24px rgba(180,20,20,.5);
+}
+.death-sub { margin-top: 10px; color: #c9a24a; font-size: 14px; letter-spacing: 2px; }
+
+/* 过图提示 */
+#map-banner {
+  position: absolute; left: 50%; top: 38%; transform: translate(-50%, -50%);
+  z-index: 18; pointer-events: none;
+  padding: 10px 40px; color: #ffe6b0; font-size: 22px; letter-spacing: 6px;
+  background: rgba(10,7,3,.75); border-top: 1px solid #a8843f; border-bottom: 1px solid #a8843f;
+  text-shadow: 0 2px 8px #000; opacity: 0; transition: opacity .35s;
+}
+#map-banner.show { opacity: 1; }
+#map-banner.hidden { display: none; }
+
+#audio-toggle {
+  position: absolute; right: 10px; bottom: 76px; z-index: 6;
+  background: linear-gradient(180deg,#2e2312,#130e07);
+  border: 1px solid #8c6a32; color: #d9cba8; font: 11px "Songti SC", serif;
+  padding: 4px 10px; border-radius: 3px; cursor: pointer;
+}
+#audio-toggle:hover { color: #fff1c8; border-color: #e8c36a; }
+
+/* 登录 */
+#login-screen {
+  position: fixed; inset: 0; z-index: 40;
+  background: radial-gradient(circle at 50% 30%, #1b140c, #05060a 70%);
+  display: flex; align-items: center; justify-content: center;
+}
+#login-screen.hidden { display: none; }
+.login-box {
+  width: 330px; padding: 26px 30px;
+  background: url("/assets/thirdparty/fantasy_gui/panel_wide.png") center / 100% 100% no-repeat;
+  color: #f0d9a8; text-align: center;
+}
+.login-title { font-size: 26px; letter-spacing: 8px; color: #f5d98a; text-shadow: 0 2px 8px #000; }
+.login-sub { font-size: 11px; color: #a8843f; margin: 6px 0 18px; }
+.login-box label { display: flex; align-items: center; gap: 8px; margin: 10px 0; font-size: 12px; color: #c9b789; }
+.login-box input, .login-box select {
+  flex: 1; background: rgba(20,14,8,.9); border: 1px solid #6b542c;
+  color: #f0e4c8; padding: 6px 8px; outline: none; font: 13px "Songti SC", serif;
+}
+.login-actions { display: flex; gap: 8px; margin-top: 16px; }
+.login-actions button {
+  flex: 1; padding: 8px; cursor: pointer;
+  background: url("/assets/thirdparty/fantasy_gui/gem_gold.png") center / 100% 100% no-repeat;
+  border: 0; color: #fff4d0; font: 13px "Songti SC", serif; text-shadow: 0 1px 2px #2a1504;
+}
+.login-actions button:hover { filter: brightness(1.25); }
+#login-msg { min-height: 18px; margin-top: 10px; font-size: 11px; color: #ff9a7a; }
+
+#logout-btn {
+  position: absolute; right: 10px; bottom: 108px; z-index: 6;
+  background: linear-gradient(180deg,#2e2312,#130e07);
+  border: 1px solid #8c6a32; color: #d9cba8; font: 11px "Songti SC", serif;
+  padding: 4px 10px; border-radius: 3px; cursor: pointer;
+}
+#logout-btn:hover { color: #fff1c8; border-color: #e8c36a; }
+.pass-box { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; }
+.pass-box input { flex: 1; min-width: 90px; background: rgba(20,14,8,.9); border: 1px solid #6b542c; color: #f0e4c8; padding: 4px 6px; font: 11px "Songti SC"; }
+.pass-box button { background: #4a2c14; border: 1px solid #7a4a20; color: #f0d9a8; padding: 4px 8px; cursor: pointer; }
+
+#char-screen {
+  position: fixed; inset: 0; z-index: 39;
+  background: radial-gradient(circle at 50% 30%, #1b140c, #05060a 70%);
+  display: flex; align-items: center; justify-content: center;
+}
+#char-screen.hidden { display: none; }
+.char-box {
+  width: 420px; padding: 24px 28px;
+  background: url("/assets/thirdparty/fantasy_gui/panel_wide.png") center / 100% 100% no-repeat;
+  color: #f0d9a8;
+}
+#char-list { margin: 14px 0; display: flex; flex-direction: column; gap: 6px; min-height: 70px; }
+.char-card {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 12px; cursor: pointer;
+  background: rgba(20,14,8,.65); border: 1px solid #6b542c; border-radius: 3px;
+}
+.char-card:hover { border-color: #e8c36a; }
+.char-card b { color: #f5d98a; font-size: 14px; }
+.char-card span { color: #c9b789; font-size: 11px; }
+.create-row { display: flex; gap: 5px; margin-top: 8px; }
+.create-row input, .create-row select {
+  flex: 1; background: rgba(20,14,8,.9); border: 1px solid #6b542c;
+  color: #f0e4c8; padding: 6px; font: 12px "Songti SC";
+}
+.create-row button, .back-btn {
+  background: #4a2c14; border: 1px solid #7a4a20; color: #f0d9a8;
+  padding: 6px 10px; cursor: pointer; font: 12px "Songti SC";
+}
+.back-btn { margin-top: 12px; width: 100%; }
+#char-msg { min-height: 18px; margin-top: 8px; color: #ff9a7a; font-size: 11px; text-align: center; }
+
+.member-row { display:flex; align-items:center; gap:6px; padding:4px 0; border-bottom:1px solid rgba(91,69,35,.35); font-size:12px; }
+.member-row .bar { flex:1; height:7px; }
+.member-row b { color:#5a2a10; }
+.social-form { display:flex; gap:5px; margin:8px 0; }
+.social-form input { flex:1; min-width:0; background:rgba(20,14,8,.9); border:1px solid #6b542c; color:#f0e4c8; padding:4px 6px; font:11px "Songti SC"; }
+.social-form button { background:#4a2c14; border:1px solid #7a4a20; color:#f0d9a8; padding:4px 8px; cursor:pointer; }
+
+.char-card .mini { background:#4a2c14; border:1px solid #7a4a20; color:#f0d9a8; font-size:10px; padding:2px 5px; cursor:pointer; margin-left:3px; }

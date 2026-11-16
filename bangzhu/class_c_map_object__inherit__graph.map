@@ -1,0 +1,4 @@
+base referer
+rect $class_c_alive_object.html 13,82 114,108
+rect $class_c_down_item_object.html 138,82 269,108
+rect $class_c_human_player.html 7,156 119,183

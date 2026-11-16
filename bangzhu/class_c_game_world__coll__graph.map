@@ -1,0 +1,6 @@
+base referer
+rect $class_c_logic_map_mgr.html 40,47 152,74
+rect $class_c_item_manager.html 42,138 151,164
+rect $class_c_physics_map_mgr.html 34,228 159,255
+rect $class_c_human_player_mgr.html 28,319 164,346
+rect $classx_list_host.html 8,370 184,396

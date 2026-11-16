@@ -1,0 +1,4 @@
+base referer
+rect $stdafx_8h.html 7,7 79,34
+rect $_down_item_mgr_8h.html 103,7 223,34
+rect $_human_player_8h.html 359,7 469,34

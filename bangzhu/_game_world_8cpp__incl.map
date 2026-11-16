@@ -1,0 +1,7 @@
+base referer
+rect $stdafx_8h.html 7,7 79,34
+rect $_game_world_8h.html 103,7 210,34
+rect $_physics_map_mgr_8h.html 234,7 359,34
+rect $_logic_map_mgr_8h.html 383,7 492,34
+rect $_human_player_mgr_8h.html 516,7 650,34
+rect $_item_manager_8h.html 674,7 786,34

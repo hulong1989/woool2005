@@ -1,0 +1,7 @@
+base referer
+rect $_human_player_8h.html 169,231 278,258
+rect $_alive_object_8h.html 7,157 103,183
+rect $_map_object_8h.html 7,82 103,109
+rect $v_map_8h.html 22,7 89,34
+rect $_equipment_8h.html 231,157 327,183
+rect $_exchange_obj_8h.html 351,157 461,183
