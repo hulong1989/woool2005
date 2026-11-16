@@ -1,0 +1,78 @@
+name: Bug 报告
+description: 报告可复现的缺陷（服务端、客户端、工具或数据表）
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        提交前请先确认：
+        - 已运行 `make validate` 和 `make smoke`（或 `make check`），并附上结果
+        - 已搜索现有 issue，避免重复
+        - 不要粘贴包含账号密码/密钥的内容
+  - type: input
+    id: version
+    attributes:
+      label: 版本 / 提交
+      description: v0.1.0、`git log -1 --oneline` 的输出或 tag
+    validations:
+      required: true
+  - type: dropdown
+    id: component
+    attributes:
+      label: 模块
+      options:
+        - C++ 服务端（server）
+        - 数据表 / 地图（data）
+        - 桌面客户端（client/desktop_client.py）
+        - 工具 / CI（tools、.github）
+        - 文档（docs、README）
+        - 其它
+    validations:
+      required: true
+  - type: input
+    id: platform
+    attributes:
+      label: 环境
+      description: 操作系统、CPU 架构、编译器、Python 版本
+      placeholder: macOS 15 arm64 / clang 21 / Python 3.9.6
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: 复现步骤
+      description: 尽量给出最小命令序列（控制台命令或客户端操作）
+      placeholder: |
+        1. ./build/GameServer
+        2. addbot 测试 战士
+        3. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: 期望行为
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: 实际行为
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: 日志 / 相关输出
+      description: 服务端日志、`make check` 结果、崩溃栈等（大段内容建议用 gist）
+      render: text
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: 确认
+      options:
+        - label: 我已运行 `make validate` 与 `make smoke`（或 `make check`）
+          required: true
+        - label: 我已搜索过现有 issue
+          required: true

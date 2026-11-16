@@ -38,6 +38,9 @@ jobs:
       - name: 数据表校验
         run: python3 tools/validate_data.py
 
+      - name: 文档链接检查
+        run: python3 tools/check_links.py
+
       - name: 构建（-Wall）
         run: make -j4 CXX=${{ matrix.cxx }}
 
@@ -45,12 +48,7 @@ jobs:
         env:
           LANG: C.UTF-8
           PYTHONIOENCODING: utf-8
-        run: |
-          rm -rf "$RUNNER_TEMP/woool-ci"
-          mkdir -p "$RUNNER_TEMP/woool-ci"
-          cp -a build data tools gameserver.ini "$RUNNER_TEMP/woool-ci/"
-          cd "$RUNNER_TEMP/woool-ci"
-          python3 tools/smoke_test.py
+        run: python3 tools/run_smoke_isolated.py
 
   sanitizers:
     name: ASan + UBSan（ubuntu）
@@ -72,9 +70,4 @@ jobs:
           PYTHONIOENCODING: utf-8
           ASAN_OPTIONS: detect_leaks=0:abort_on_error=1
           UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
-        run: |
-          rm -rf "$RUNNER_TEMP/woool-asan"
-          mkdir -p "$RUNNER_TEMP/woool-asan"
-          cp -a build data tools gameserver.ini "$RUNNER_TEMP/woool-asan/"
-          cd "$RUNNER_TEMP/woool-asan"
-          python3 tools/smoke_test.py
+        run: python3 tools/run_smoke_isolated.py

@@ -19,6 +19,9 @@ data/players/
 # ASan 构建目录
 build-asan/
 
+# 发布构建目录
+build-release/
+
 # 运行时行会数据
 data/guilds.dat
 
@@ -30,3 +33,6 @@ client/assets/*.wav
 # server996 外壳运行时日志与自动备份
 server996/Log/
 server996/Share/
+
+# 发布打包产物
+dist/

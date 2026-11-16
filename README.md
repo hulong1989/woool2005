@@ -34,6 +34,7 @@ make                      # 生成 build/GameServer（macOS / Linux，C++11）
 
 make smoke                # 176 项控制台回归测试（tools/smoke_test.py）
 make validate             # 20 张数据表校验：字段/范围/交叉引用/地图完整性
+make check                # 一键：数据校验 + 文档链接 + 176 项回归
 python3 client/desktop_client.py   # Pygame 桌面客户端（vendor/ 内置 macOS arm64 pygame）
 python3 tools/server_dashboard.py  # Web 管理后台 http://127.0.0.1:8099
 python3 server996/engine996.py     # 仿 996 多进程外壳（Gate 7101 / DB 7002 / Log 7003 ...）
@@ -46,12 +47,16 @@ Windows 构建见 [docs/WINDOWS.md](docs/WINDOWS.md)（MinGW 脚本，未在 mac
 | 检查 | 命令 | CI |
 |---|---|---|
 | 数据表校验（字段/范围/交叉引用/地图） | `make validate` | Ubuntu + macOS |
+| 文档链接检查（README/docs/CHANGELOG/NOTICE） | `python3 tools/check_links.py` | Ubuntu + macOS |
 | 构建（`-Wall`，0 warning） | `make` | Ubuntu + macOS |
 | 176 项端到端回归（控制台驱动） | `make smoke` | Ubuntu + macOS |
 | ASan + UBSan 全量回归 | 见 `.github/workflows/ci.yml` | Ubuntu |
+| 一键检查（校验 + 链接 + 回归） | `make check` | — |
+| 发布包（平台相关，含 `build/GameServer` + `data/`） | `make package VERSION=v0.1.1` | — |
 
 CI 在隔离副本中运行回归（`data/` 会被测试修改，避免污染工作区）。
 `tools/validate_data.py` 支持 `--only`、`--strict`、`--quiet`；当前仓库有 16 条 warning（见"已知问题"）。
+问题反馈请使用 GitHub issue 模板；提交 PR 前请跑 `make check`。
 
 ## 目录
 
@@ -78,6 +83,7 @@ CI 在隔离副本中运行回归（`data/` 会被测试修改，避免污染工
 | [docs/RECONSTRUCTION.md](docs/RECONSTRUCTION.md) | 快照缺什么、按什么依据补、对原代码改了哪里、如何验证 |
 | [docs/BALANCE.md](docs/BALANCE.md) | 数值平衡计算报告（职业/技能 DPS、Boss TTK、生存能力） |
 | [docs/WINDOWS.md](docs/WINDOWS.md) | Windows（MSYS2/MinGW）构建、打包与运行 |
+| [CHANGELOG.md](CHANGELOG.md) | 版本变更记录 |
 | [NOTICE.md](NOTICE.md) | 代码来源、授权状态、第三方素材许可 |
 
 ## 已知问题

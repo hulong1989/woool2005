@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 架构与阅读路径
+    url: https://github.com/hulong1989/woool2005/blob/main/docs/ARCHITECTURE.md
+    about: 先了解分层、启动链路与对象模型
+  - name: 协议与数据格式
+    url: https://github.com/hulong1989/woool2005/blob/main/docs/DATA-FORMAT.md
+    about: 数据表字段、存档格式与扩展步骤
+  - name: 构建与回归
+    url: https://github.com/hulong1989/woool2005/blob/main/README.md#开发与回归
+    about: 构建、make check、CI 说明

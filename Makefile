@@ -4,6 +4,7 @@
 #   Windows+MSVC  : build.bat
 
 CXX      ?= clang++
+VERSION  ?= v0.1.1
 CXXFLAGS ?= -std=c++11 -g -O0 -Wall -Wno-unused-parameter -Wno-reorder
 # 自动生成头文件依赖，避免修改头文件后仍复用旧目标文件
 CXXFLAGS += -MMD -MP
@@ -26,7 +27,7 @@ OBJS := $(patsubst %.cpp,$(BUILD)/%.o,$(SOURCES))
 DEPS := $(OBJS:.o=.d)
 BIN  := $(BUILD)/GameServer
 
-.PHONY: all run test smoke validate screenshots client client-test clean
+.PHONY: all run test smoke validate links check package screenshots client client-test clean
 
 all: $(BIN)
 
@@ -50,6 +51,17 @@ smoke: $(BIN)
 validate:
 	@python3 tools/validate_data.py
 
+links:
+	@python3 tools/check_links.py
+
+# 一键：数据校验 + 文档链接检查 + 176 项回归（回归在隔离副本中跑，不脏工作区）
+check: validate links $(BIN)
+	@python3 tools/run_smoke_isolated.py
+
+# 生成可运行的 server 发布包（-O2 构建到 build-release/，输出 dist/*.tar.gz）
+package: $(BIN)
+	@python3 tools/package_release.py --version $(VERSION) --build
+
 # 需要先另开终端启动 ./build/GameServer
 screenshots: $(BIN)
 	python3 tools/capture_screenshots.py
@@ -61,6 +73,6 @@ client-test: $(BIN)
 	python3 tools/client_test.py
 
 clean:
-	rm -rf build build-asan
+	rm -rf build build-asan build-release
 
 -include $(DEPS)
