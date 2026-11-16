@@ -119,9 +119,12 @@ def validate_items():
     names = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) in (20, 22), where, "字段数应为 20 或 22，实际 %d" % len(f))
+        check(len(f) >= 20, where, "字段数至少 20，实际 %d" % len(f))
         if len(f) < 20:
             continue
+        if len(f) not in (20, 22):
+            warning(where, "字段数 %d 不是 20 或 22（第 21/22 列是可选药品字段，"
+                           "多出的列会被忽略）" % len(f))
         name = f[0]
         as_name(name, where, "名字（ITEMBASE.szName[16]）", 15)
         if name in names:
@@ -140,8 +143,9 @@ def validate_items():
         as_int(f[17], where, "price")
         as_int(f[18], where, "needtype")
         as_int(f[19], where, "needlevel")
-        if len(f) >= 22:
+        if len(f) >= 21:
             as_int(f[20], where, "useType", 0, 3)
+        if len(f) >= 22:
             as_int(f[21], where, "useValue", 0, 65535)
     return names
 
@@ -151,14 +155,18 @@ def validate_monsters(item_names):
     names = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 10, where, "字段数应为 10，实际 %d" % len(f))
-        if len(f) < 10:
+        check(len(f) >= 8, where, "字段数至少 8，实际 %d" % len(f))
+        if len(f) < 8:
             continue
+        if len(f) > 10:
+            warning(where, "字段数 %d > 10，多出的列会被忽略" % len(f))
         name = as_name(f[0], where, "名字", 31)
         if name in names:
             warning(where, "重复怪物名 %r" % name)
         names.add(name)
-        as_int(f[1], where, "最大HP", 1)
+        hp = as_int(f[1], where, "最大HP", 0)
+        if hp is not None and hp <= 0:
+            warning(where, "最大HP=%d，加载器会钳到 1" % hp)
         min_atk = as_int(f[2], where, "最小攻击", 0)
         max_atk = as_int(f[3], where, "最大攻击", 0)
         if min_atk is not None and max_atk is not None and min_atk > max_atk:
@@ -169,8 +177,10 @@ def validate_monsters(item_names):
             as_name(f[6], where, "掉落物品", 31)
             check(f[6] in item_names, where, "掉落物品 %r 不在 baseitem.txt" % f[6])
         as_int(f[7], where, "掉率", 0, 100)
-        as_int(f[8], where, "等级", 1)
-        as_int(f[9], where, "外形", 0)
+        if len(f) >= 9:
+            as_int(f[8], where, "等级", 1)
+        if len(f) >= 10:
+            as_int(f[9], where, "外形", 0)
     return names
 
 
@@ -178,9 +188,11 @@ def validate_spawns(map_ids, monster_names):
     path = require_file(os.path.join(DATA, "spawns.txt"))
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 5, where, "字段数应为 5，实际 %d" % len(f))
+        check(len(f) >= 5, where, "字段数至少 5，实际 %d" % len(f))
         if len(f) < 5:
             continue
+        if len(f) > 5:
+            warning(where, "字段数 %d > 5，多出的列会被忽略" % len(f))
         map_id = as_int(f[0], where, "地图id", 1)
         if map_id is not None:
             check(map_id in map_ids, where, "地图 %d 不存在（data/maps/logic/%d.ini）"
@@ -195,9 +207,11 @@ def validate_drops(monster_names, item_names):
     path = require_file(os.path.join(DATA, "drops.txt"))
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 3, where, "字段数应为 3，实际 %d" % len(f))
+        check(len(f) >= 3, where, "字段数至少 3，实际 %d" % len(f))
         if len(f) < 3:
             continue
+        if len(f) > 3:
+            warning(where, "字段数 %d > 3，多出的列会被忽略" % len(f))
         check(f[0] in monster_names, where, "怪物 %r 不在 monsters.txt" % f[0])
         check(f[1] in item_names, where, "物品 %r 不在 baseitem.txt" % f[1])
         as_int(f[2], where, "概率", 0, 100)
@@ -208,9 +222,11 @@ def validate_classes(skill_classes=None):
     ids = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 11, where, "字段数应为 11，实际 %d" % len(f))
+        check(len(f) >= 11, where, "字段数至少 11，实际 %d" % len(f))
         if len(f) < 11:
             continue
+        if len(f) > 11:
+            warning(where, "字段数 %d > 11，多出的列会被忽略" % len(f))
         class_id = as_int(f[0], where, "职业id", 0, 2)
         if class_id is not None:
             check(class_id not in ids, where, "重复职业id %d" % class_id)
@@ -235,9 +251,11 @@ def validate_levels():
     levels = []
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 2, where, "字段数应为 2，实际 %d" % len(f))
+        check(len(f) >= 2, where, "字段数至少 2，实际 %d" % len(f))
         if len(f) < 2:
             continue
+        if len(f) > 2:
+            warning(where, "字段数 %d > 2，多出的列会被忽略" % len(f))
         level = as_int(f[0], where, "等级", 1)
         exp = as_int(f[1], where, "升级经验", 1)
         if level is not None:
@@ -255,9 +273,11 @@ def validate_skills():
     ids = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 9, where, "字段数应为 9，实际 %d" % len(f))
+        check(len(f) >= 9, where, "字段数至少 9，实际 %d" % len(f))
         if len(f) < 9:
             continue
+        if len(f) > 9:
+            warning(where, "字段数 %d > 9，多出的列会被忽略" % len(f))
         skill_id = as_int(f[0], where, "技能id", 1)
         if skill_id is not None:
             check(skill_id not in ids, where, "重复技能id %d" % skill_id)
@@ -279,9 +299,11 @@ def validate_shop(item_names):
     path = require_file(os.path.join(DATA, "shop.txt"))
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 2, where, "字段数应为 2，实际 %d" % len(f))
+        check(len(f) >= 2, where, "字段数至少 2，实际 %d" % len(f))
         if len(f) < 2:
             continue
+        if len(f) > 2:
+            warning(where, "字段数 %d > 2，多出的列会被忽略" % len(f))
         check(f[0] in item_names, where, "物品 %r 不在 baseitem.txt" % f[0])
         as_int(f[1], where, "售价", 1)
 
@@ -291,11 +313,11 @@ def validate_npcs(map_ids):
     names = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) >= 9, where, "字段数应至少 9，实际 %d" % len(f))
-        if len(f) < 9:
+        check(len(f) >= 8, where, "字段数至少 8，实际 %d" % len(f))
+        if len(f) < 8:
             continue
         if len(f) > 9:
-            warning(where, "字段数 %d > 9，对话文本含 '/' 会被截断" % len(f))
+            warning(where, "字段数 %d > 9（对话文本含 '/' 会被截断）" % len(f))
         name = as_name(f[0], where, "名字", 31)
         if name in names:
             warning(where, "重复 NPC 名 %r（对话/商店按名字索引）" % name)
@@ -309,7 +331,7 @@ def validate_npcs(map_ids):
         dest_map = as_int(f[5], where, "目标地图", 0)
         as_int(f[6], where, "目标x", 0)
         as_int(f[7], where, "目标y", 0)
-        if f[8] == "":
+        if len(f) >= 9 and f[8] == "":
             warning(where, "对话文本为空")
         if npc_type in (2, 3) and dest_map not in (None, 0):
             check(dest_map in map_ids, where, "目标地图 %d 不存在" % dest_map)
@@ -321,8 +343,8 @@ def validate_quests(npc_names, item_names, monster_names):
     ids = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) >= 12, where, "字段数应至少 12，实际 %d" % len(f))
-        if len(f) < 12:
+        check(len(f) >= 11, where, "字段数至少 11，实际 %d" % len(f))
+        if len(f) < 11:
             continue
         quest_id = as_int(f[0], where, "任务id", 1)
         if quest_id is not None:
@@ -344,7 +366,7 @@ def validate_quests(npc_names, item_names, monster_names):
             check(f[8] in item_names, where, "奖励物品 %r 不在 baseitem.txt" % f[8])
         as_int(f[9], where, "奖励数量", 1)
         as_int(f[10], where, "需求等级", 1)
-        if f[11] == "":
+        if len(f) >= 12 and f[11] == "":
             warning(where, "对话文本为空")
         if len(f) >= 13 and f[12]:
             prev_id = as_int(f[12], where, "前置任务id", 0)
@@ -358,16 +380,20 @@ def validate_bosses(map_ids, monster_names):
     path = require_file(os.path.join(DATA, "bosses.txt"))
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 5, where, "字段数应为 5，实际 %d" % len(f))
+        check(len(f) >= 5, where, "字段数至少 5，实际 %d" % len(f))
         if len(f) < 5:
             continue
+        if len(f) > 5:
+            warning(where, "字段数 %d > 5，多出的列会被忽略" % len(f))
         check(f[0] in monster_names, where, "Boss 怪 %r 不在 monsters.txt" % f[0])
         map_id = as_int(f[1], where, "地图id", 1)
         if map_id is not None:
             check(map_id in map_ids, where, "地图 %d 不存在" % map_id)
         as_int(f[2], where, "x", 0)
         as_int(f[3], where, "y", 0)
-        as_int(f[4], where, "刷新秒数", 1)
+        interval = as_int(f[4], where, "刷新秒数", 1)
+        if interval is not None and interval < 10:
+            warning(where, "刷新秒数 %d < 10，加载器会钳到 10" % interval)
 
 
 def validate_dungeons(map_ids, monster_names, achievement_ids, title_ids):
@@ -375,10 +401,12 @@ def validate_dungeons(map_ids, monster_names, achievement_ids, title_ids):
     ids = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 6, where, "字段数应为 6（id/名称/Boss/地图列表/成就id/称号id），"
-                                 "实际 %d" % len(f))
-        if len(f) < 6:
+        check(len(f) >= 5, where,
+              "字段数至少 5（id/名称/Boss/地图列表/成就id），实际 %d" % len(f))
+        if len(f) < 5:
             continue
+        if len(f) > 6:
+            warning(where, "字段数 %d > 6，多出的列会被忽略" % len(f))
         dungeon_id = as_int(f[0], where, "副本id", 1)
         if dungeon_id is not None:
             check(dungeon_id not in ids, where, "重复副本id %d" % dungeon_id)
@@ -395,11 +423,12 @@ def validate_dungeons(map_ids, monster_names, achievement_ids, title_ids):
                 continue
             check(map_id in map_ids, where, "实例地图 %d 不存在" % map_id)
         ach_id = as_int(f[4], where, "成就id", 1)
-        title_id = as_int(f[5], where, "称号id", 1)
         if ach_id is not None:
             check(ach_id in achievement_ids, where, "成就id %d 不存在" % ach_id)
-        if title_id is not None:
-            check(title_id in title_ids, where, "称号id %d 不存在" % title_id)
+        if len(f) >= 6:
+            title_id = as_int(f[5], where, "称号id", 1)
+            if title_id is not None:
+                check(title_id in title_ids, where, "称号id %d 不存在" % title_id)
 
 
 def validate_achievements(monster_names):
@@ -408,9 +437,11 @@ def validate_achievements(monster_names):
     known_types = {"level", "boss", "dungeon", "upgrade", "enchant", "quest", "codex"}
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) >= 5, where, "字段数应至少 5，实际 %d" % len(f))
+        check(len(f) >= 5, where, "字段数至少 5，实际 %d" % len(f))
         if len(f) < 5:
             continue
+        if len(f) > 7:
+            warning(where, "字段数 %d > 7，多出的列会被忽略" % len(f))
         ach_id = as_int(f[0], where, "成就id", 1)
         if ach_id is not None:
             check(ach_id not in ids, where, "重复成就id %d" % ach_id)
@@ -436,9 +467,11 @@ def validate_titles():
     ids = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) >= 3, where, "字段数应至少 3，实际 %d" % len(f))
+        check(len(f) >= 3, where, "字段数至少 3，实际 %d" % len(f))
         if len(f) < 3:
             continue
+        if len(f) > 4:
+            warning(where, "字段数 %d > 4，多出的列会被忽略" % len(f))
         title_id = as_int(f[0], where, "称号id", 1)
         if title_id is not None:
             check(title_id not in ids, where, "重复称号id %d" % title_id)
@@ -472,9 +505,11 @@ def validate_sets(item_names):
     names = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 4, where, "字段数应为 4，实际 %d" % len(f))
+        check(len(f) >= 4, where, "字段数至少 4，实际 %d" % len(f))
         if len(f) < 4:
             continue
+        if len(f) > 4:
+            warning(where, "字段数 %d > 4，多出的列会被忽略" % len(f))
         name = as_name(f[0], where, "套装名", 31)
         if name in names:
             warning(where, "重复套装名 %r" % name)
@@ -497,10 +532,12 @@ def validate_dialogues(npc_names, map_ids):
     seen = set()
     for lineno, raw, f in read_rows(path):
         where = "%s:%d" % (os.path.relpath(path, ROOT), lineno)
-        check(len(f) == 5, where, "字段数应为 5（NPC/序号/文本/动作/参数），实际 %d"
+        check(len(f) >= 5, where, "字段数至少 5（NPC/序号/文本/动作/参数），实际 %d"
               % len(f))
         if len(f) < 5:
             continue
+        if len(f) > 5:
+            warning(where, "字段数 %d > 5，多出的列会被忽略" % len(f))
         check(f[0] in npc_names, where, "NPC %r 不在 npcs.txt" % f[0])
         index = as_int(f[1], where, "序号", 1)
         key = (f[0], index)
