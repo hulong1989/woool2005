@@ -1,0 +1,80 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: 构建 + 数据校验 + 回归（${{ matrix.os }}）
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            cxx: g++
+          - os: macos-latest
+            cxx: clang++
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 工具链版本
+        run: |
+          ${{ matrix.cxx }} --version | head -1
+          python3 --version
+          make --version | head -1
+
+      - name: 数据表校验
+        run: python3 tools/validate_data.py
+
+      - name: 构建（-Wall）
+        run: make -j4 CXX=${{ matrix.cxx }}
+
+      - name: 176 项端到端回归（隔离副本，避免污染工作区）
+        env:
+          LANG: C.UTF-8
+          PYTHONIOENCODING: utf-8
+        run: |
+          rm -rf "$RUNNER_TEMP/woool-ci"
+          mkdir -p "$RUNNER_TEMP/woool-ci"
+          cp -a build data tools gameserver.ini "$RUNNER_TEMP/woool-ci/"
+          cd "$RUNNER_TEMP/woool-ci"
+          python3 tools/smoke_test.py
+
+  sanitizers:
+    name: ASan + UBSan（ubuntu）
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 构建（ASan + UBSan）
+        run: |
+          make clean
+          make -j4 CXX=g++ \
+            CXXFLAGS="-std=c++11 -g -O1 -Wall -Wno-unused-parameter -Wno-reorder -fsanitize=address,undefined -fno-omit-frame-pointer" \
+            LDFLAGS="-fsanitize=address,undefined"
+
+      - name: 176 项端到端回归（ASan + UBSan，关闭 leak 检测）
+        env:
+          LANG: C.UTF-8
+          PYTHONIOENCODING: utf-8
+          ASAN_OPTIONS: detect_leaks=0:abort_on_error=1
+          UBSAN_OPTIONS: halt_on_error=1:print_stacktrace=1
+        run: |
+          rm -rf "$RUNNER_TEMP/woool-asan"
+          mkdir -p "$RUNNER_TEMP/woool-asan"
+          cp -a build data tools gameserver.ini "$RUNNER_TEMP/woool-asan/"
+          cd "$RUNNER_TEMP/woool-asan"
+          python3 tools/smoke_test.py

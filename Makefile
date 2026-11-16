@@ -26,7 +26,7 @@ OBJS := $(patsubst %.cpp,$(BUILD)/%.o,$(SOURCES))
 DEPS := $(OBJS:.o=.d)
 BIN  := $(BUILD)/GameServer
 
-.PHONY: all run test smoke client client-test clean
+.PHONY: all run test smoke validate screenshots client client-test clean
 
 all: $(BIN)
 
@@ -46,6 +46,13 @@ test: $(BIN)
 
 smoke: $(BIN)
 	python3 tools/smoke_test.py
+
+validate:
+	@python3 tools/validate_data.py
+
+# 需要先另开终端启动 ./build/GameServer
+screenshots: $(BIN)
+	python3 tools/capture_screenshots.py
 
 client: $(BIN)
 	python3 client/game_client.py
