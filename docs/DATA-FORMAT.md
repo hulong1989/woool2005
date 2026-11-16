@@ -319,9 +319,9 @@ python3 tools/validate_data.py --only items,skills
 python3 tools/validate_data.py --quiet         # 只打印错误与汇总
 ```
 
-- 分组（`GROUPS`）：`maps, items, monsters, spawns, drops, classes, levels, skills, shop, npcs, quests, bosses, dungeons, achievements, titles, sets, dialogues, events, accounts, gm`（`tools/validate_data.py:751-753`）。
+- 分组（`GROUPS`）：`maps, items, monsters, spawns, drops, classes, levels, skills, shop, npcs, quests, bosses, dungeons, achievements, titles, sets, dialogues, events, accounts, gm`（`tools/validate_data.py:788-790`）。
 - 检查项：字段数、数值范围、交叉引用（物品/怪物/NPC/地图/成就/称号 id）、地图文件完整性、账号/角色/GM 表；纯只读。
-- 退出码：0 通过（可含 warning），1 有 error（`--strict` 下 warning 也算失败）（`tools/validate_data.py:12-14`）。
+- 退出码：0 通过（可含 warning），1 有 error（`--strict` 下 warning 也算失败）（`tools/validate_data.py:11-13`）。
 - 当前运行结果：**2350 项检查，0 error，16 warning**；warning 主要是 `ITEMBASE.szName[16]` 只能放 15 字节，若干 17–20 字节中文物品名会被截断（`data/baseitem.txt` 的“雷霆战甲(男)”等）。
 
 运行时回归用 `python3 tools/smoke_test.py`（会启停服务端并写入测试存档），与静态校验互补。
